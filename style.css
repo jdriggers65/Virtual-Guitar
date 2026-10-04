@@ -258,3 +258,35 @@ body {
     top: -20px;
     bottom: -20px;
 }
+
+/* ==================================
+   0.5 - LANDSCAPE MODE
+================================== */
+
+/* Portrait orientation */
+@media (orientation: portrait) {
+
+    .guitar-app {
+        display: none;
+    }
+
+    body::after {
+        content: "↻  Rotate your phone to play";
+
+        position: fixed;
+        inset: 0;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        padding: 30px;
+
+        background: #111;
+        color: white;
+
+        font-size: 24px;
+        font-weight: bold;
+        text-align: center;
+    }
+}
