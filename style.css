@@ -1,0 +1,185 @@
+/* ------------------------------
+   BASIC PAGE SETUP
+------------------------------ */
+
+* {
+    box-sizing: border-box;
+}
+
+html,
+body {
+    margin: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    background: #111;
+}
+
+
+/* ------------------------------
+   MAIN APP
+------------------------------ */
+
+.guitar-app {
+    width: 100vw;
+    height: 100vh;
+
+    display: flex;
+}
+
+
+/* ------------------------------
+   LEFT CONTROL PANEL
+------------------------------ */
+
+.controls {
+    width: 32%;
+    height: 100%;
+
+    background: #c85d4d;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+
+/* ------------------------------
+   CHORD BUTTON AREA
+------------------------------ */
+
+.chord-buttons {
+    height: 80%;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+}
+
+
+/* ------------------------------
+   CHORD BUTTONS
+------------------------------ */
+
+.chord {
+    width: 60px;
+    height: 60px;
+
+    border: none;
+    border-radius: 12px;
+
+    font-size: 24px;
+    font-weight: bold;
+
+    color: white;
+
+    cursor: pointer;
+
+    box-shadow: 0 5px 8px rgba(0, 0, 0, 0.35);
+
+    transition:
+        transform 0.1s,
+        box-shadow 0.1s;
+}
+
+
+/* Major chords */
+
+.chord.major {
+    background: #283ac7;
+}
+
+
+/* Minor chords */
+
+.chord.minor {
+    background: #35aebe;
+}
+
+
+/* Selected chord */
+
+.chord.selected {
+    outline: 4px solid white;
+
+    transform: scale(1.08);
+}
+
+
+/* Button press */
+
+.chord:active {
+    transform: scale(0.95);
+}
+
+
+/* ------------------------------
+   GUITAR AREA
+------------------------------ */
+
+.guitar {
+    width: 68%;
+    height: 100%;
+
+    background:
+        radial-gradient(
+            circle at center,
+            #090909 0%,
+            #090909 25%,
+            transparent 26%
+        ),
+        linear-gradient(
+            135deg,
+            #934333,
+            #32100d
+        );
+
+    display: flex;
+    flex-direction: column;
+
+    justify-content: space-evenly;
+
+    padding: 10% 0;
+
+    touch-action: none;
+    cursor: pointer; 
+    user-select: none;
+}
+
+
+/* ------------------------------
+   GUITAR STRINGS
+------------------------------ */
+
+.string {
+    width: 100%;
+    height: 8px;
+
+    background: #eeeeee;
+
+    cursor: pointer;
+
+    position: relative;
+}
+
+
+/*
+   Invisible touch area around
+   each visible guitar string
+*/
+
+.string::before {
+    content: "";
+
+    position: absolute;
+
+    left: 0;
+    right: 0;
+
+    top: -20px;
+    bottom: -20px;
+}
