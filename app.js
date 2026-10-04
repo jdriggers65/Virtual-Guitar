@@ -277,24 +277,43 @@ guitar.addEventListener("pointercancel", () => {
 
 function getNearestString(pointerY) {
 
+    const stringCenters = Array.from(strings).map(string => {
+        const rect = string.getBoundingClientRect();
+        return rect.top + (rect.height / 2);
+    });
+
+    // Distance between the first two strings
+    const stringSpacing =
+        stringCenters[1] - stringCenters[0];
+
+    // Create invisible boundaries half a string-space
+    // above the first string and below the last string
+    const topBoundary =
+        stringCenters[0] - (stringSpacing / 2);
+
+    const bottomBoundary =
+        stringCenters[stringCenters.length - 1] +
+        (stringSpacing / 2);
+
+    // Outside the playable string area = NULL
+    if (
+        pointerY < topBoundary ||
+        pointerY > bottomBoundary
+    ) {
+        return null;
+    }
+
     let nearestIndex = null;
     let nearestDistance = Infinity;
 
-    strings.forEach((string, index) => {
-
-        const rect = string.getBoundingClientRect();
-
-        const stringCenter =
-            rect.top + (rect.height / 2);
+    stringCenters.forEach((stringCenter, index) => {
 
         const distance =
             Math.abs(pointerY - stringCenter);
 
         if (distance < nearestDistance) {
-
             nearestDistance = distance;
             nearestIndex = index;
-
         }
 
     });
