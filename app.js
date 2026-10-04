@@ -125,8 +125,21 @@ const noteFrequencies = {
 
 };
 
-const audioContext =
-    new (window.AudioContext || window.webkitAudioContext)();
+let audioContext = null;
+
+function getAudioContext() {
+
+    if (!audioContext) {
+        audioContext =
+            new (window.AudioContext || window.webkitAudioContext)();
+    }
+
+    if (audioContext.state === "suspended") {
+        audioContext.resume();
+    }
+
+    return audioContext;
+}
     
 function playNote(note) {
 
@@ -135,6 +148,8 @@ function playNote(note) {
         return;
     }
 
+    const audio = getAudioContext();
+
     const frequency = noteFrequencies[note];
 
     if (!frequency) {
@@ -142,33 +157,33 @@ function playNote(note) {
         return;
     }
 
-    const oscillator = audioContext.createOscillator();
-    const gain = audioContext.createGain();
+    const oscillator = audio.createOscillator();
+    const gain = audio.createGain();
 
     oscillator.type = "triangle";
 
     oscillator.frequency.value = frequency;
 
     oscillator.connect(gain);
-    gain.connect(audioContext.destination);
+    gain.connect(audio.destination);
 
 
     // Start quietly
     gain.gain.setValueAtTime(
         0.0001,
-        audioContext.currentTime
+        audio.currentTime
     );
 
     // Quick attack
     gain.gain.exponentialRampToValueAtTime(
         0.4,
-        audioContext.currentTime + 0.01
+        audio.currentTime + 0.01
     );
 
     // Fade out
     gain.gain.exponentialRampToValueAtTime(
         0.0001,
-        audioContext.currentTime + 1.2
+        audio.currentTime + 1.2
     );
 
 
