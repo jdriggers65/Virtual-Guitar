@@ -1,11 +1,159 @@
 // ---------------------------------
+// KEY / TRANSPOSE CONTROL
+// ---------------------------------
+
+const keys = [
+    "C",
+    "Db",
+    "D",
+    "Eb",
+    "E",
+    "F",
+    "F#",
+    "G",
+    "Ab",
+    "A",
+    "Bb",
+    "B"
+];
+
+const keyChords = {
+    C:  ["C",  "Dm",  "Em",  "F",  "G",  "Am"],
+    Db: ["Db", "Ebm", "Fm",  "Gb", "Ab", "Bbm"],
+    D:  ["D",  "Em",  "F#m", "G",  "A",  "Bm"],
+    Eb: ["Eb", "Fm",  "Gm",  "Ab", "Bb", "Cm"],
+    E:  ["E",  "F#m", "G#m", "A",  "B",  "C#m"],
+    F:  ["F",  "Gm",  "Am",  "Bb", "C",  "Dm"],
+    "F#": ["F#", "G#m", "A#m", "B", "C#", "D#m"],
+    G:  ["G",  "Am",  "Bm",  "C",  "D",  "Em"],
+    Ab: ["Ab", "Bbm", "Cm",  "Db", "Eb", "Fm"],
+    A:  ["A",  "Bm",  "C#m", "D",  "E",  "F#m"],
+    Bb: ["Bb", "Cm",  "Dm",  "Eb", "F",  "Gm"],
+    B:  ["B",  "C#m", "D#m", "E",  "F#", "G#m"]
+};
+
+function updateChordsForKey() {
+    const currentKey = keys[currentKeyIndex];
+    const chords = keyChords[currentKey];
+
+    chordButtons.forEach((button, index) => {
+        button.dataset.chord = chords[index];
+    });
+
+    updateChordButtonLabels();
+
+    // Keep the currently selected Roman numeral
+    // and update its actual chord
+    const selectedButton =
+        document.querySelector(".chord.selected");
+
+    if (selectedButton) {
+        selectedChord = selectedButton.dataset.chord;
+        currentChordDisplay.textContent = selectedChord;
+    }
+
+    console.log(
+        "Key:",
+        currentKey,
+        "Chords:",
+        chords
+    );
+}
+
+let currentKeyIndex = 7; // G
+
+const currentKeyDisplay =
+    document.getElementById("current-key");
+
+const keyUpButton =
+    document.getElementById("key-up");
+
+const keyDownButton =
+    document.getElementById("key-down");
+
+
+keyUpButton.addEventListener("pointerdown", () => {
+
+    currentKeyIndex =
+        (currentKeyIndex + 1) % keys.length;
+
+    currentKeyDisplay.textContent =
+        keys[currentKeyIndex];
+        updateChordsForKey();
+
+});
+
+
+keyDownButton.addEventListener("pointerdown", () => {
+
+    currentKeyIndex =
+        (currentKeyIndex - 1 + keys.length) % keys.length;
+
+    currentKeyDisplay.textContent =
+        keys[currentKeyIndex];
+        updateChordsForKey();
+
+});
+
+// ---------------------------------
 // CHORD BUTTONS
 // ---------------------------------
 
 const chordButtons = document.querySelectorAll(".chord");
 
+const currentChordDisplay =
+    document.getElementById("current-chord");
+
+const chordModeToggle =
+    document.getElementById("chord-mode-toggle");
+
+let showChordNames = false;
+
+function updateChordButtonLabels() {
+
+    const romanNumerals = [
+        "I",
+        "ii",
+        "iii",
+        "IV",
+        "V",
+        "vi"
+    ];
+
+    chordButtons.forEach((button, index) => {
+
+        if (showChordNames) {
+            button.textContent =
+                button.dataset.chord;
+        } else {
+            button.textContent =
+                romanNumerals[index];
+        }
+
+    });
+
+  }
+
+chordModeToggle.addEventListener(
+    "pointerdown",
+    () => {
+
+        showChordNames = !showChordNames;
+
+        updateChordButtonLabels();
+
+        if (showChordNames) {
+            chordModeToggle.textContent = "CHORD";
+        } else {
+            chordModeToggle.textContent = "NUM";
+        }
+    }
+);
+
 // Start with G selected
 let selectedChord = "G";
+
+updateChordsForKey();
 
 chordButtons.forEach(button => {
 
@@ -21,6 +169,7 @@ chordButtons.forEach(button => {
 
         // Store the selected chord
         selectedChord = button.dataset.chord;
+        currentChordDisplay.textContent = selectedChord;
 
         console.log("Selected chord:", selectedChord);
 
@@ -30,67 +179,71 @@ chordButtons.forEach(button => {
 
 
 // ---------------------------------
-// CHORD / STRING NOTE MAP
+// GUITAR CHORD VOICINGS
+// Notes listed Low E -> High E
+// null = muted string
 // ---------------------------------
 
 const chordNotes = {
 
-    G: [
-        "G2",
-        "B2",
-        "D3",
-        "G3",
-        "B3",
-        "G4"
-    ],
+    // ----- C -----
+    C:   [null, "C3", "E3", "G3", "C4", "E4"],
+    Cm:  [null, "C3", "G3", "C4", "Eb4", "G4"],
 
-    Am: [
-        null,
-        "A2",
-        "E3",
-        "A3",
-        "C4",
-        "E4"
-    ],
+    // ----- C# / Db -----
+    "C#":  [null, "C#3", "G#3", "C#4", "F4", "G#4"],
+    "C#m": [null, "C#3", "G#3", "C#4", "E4", "G#4"],
 
-    Bm: [
-        null,
-        "B2",
-        "F#3",
-        "B3",
-        "D4",
-        "F#4"
-    ],
+    Db:   [null, "Db3", "Ab3", "Db4", "F4", "Ab4"],
 
-    C: [
-        null,
-        "C3",
-        "E3",
-        "G3",
-        "C4",
-        "E4"
-    ],
+    // ----- D -----
+    D:   [null, null, "D3", "A3", "D4", "F#4"],
+    Dm:  [null, null, "D3", "A3", "D4", "F4"],
 
-    D: [
-        null,
-        null,
-        "D3",
-        "A3",
-        "D4",
-        "F#4"
-    ],
+    // ----- D# / Eb -----
+    "D#m": [null, "D#3", "A#3", "D#4", "F#4", "A#4"],
 
-    Em: [
-        "E2",
-        "B2",
-        "E3",
-        "G3",
-        "B3",
-        "E4"
-    ]
+    Eb:   [null, "Eb3", "Bb3", "Eb4", "G4", "Bb4"],
+    Ebm:  [null, "Eb3", "Bb3", "Eb4", "Gb4", "Bb4"],
+
+    // ----- E -----
+    E:   ["E2", "B2", "E3", "G#3", "B3", "E4"],
+    Em:  ["E2", "B2", "E3", "G3", "B3", "E4"],
+
+    // ----- F -----
+    F:   ["F2", "C3", "F3", "A3", "C4", "F4"],
+    Fm:  ["F2", "C3", "F3", "Ab3", "C4", "F4"],
+
+    // ----- F# / Gb -----
+    "F#":  ["F#2", "C#3", "F#3", "A#3", "C#4", "F#4"],
+    "F#m": ["F#2", "C#3", "F#3", "A3", "C#4", "F#4"],
+
+    Gb:   ["Gb2", "Db3", "Gb3", "Bb3", "Db4", "Gb4"],
+
+    // ----- G -----
+    G:   ["G2", "B2", "D3", "G3", "B3", "G4"],
+    Gm:  ["G2", "D3", "G3", "Bb3", "D4", "G4"],
+
+    // ----- G# / Ab -----
+    "G#m": ["G#2", "D#3", "G#3", "B3", "D#4", "G#4"],
+
+    Ab:   ["Ab2", "Eb3", "Ab3", "C4", "Eb4", "Ab4"],
+
+    // ----- A -----
+    A:   [null, "A2", "E3", "A3", "C#4", "E4"],
+    Am:  [null, "A2", "E3", "A3", "C4", "E4"],
+
+    // ----- A# / Bb -----
+    "A#m": [null, "A#2", "F3", "A#3", "C#4", "F4"],
+
+    Bb:   [null, "Bb2", "F3", "Bb3", "D4", "F4"],
+    Bbm:  [null, "Bb2", "F3", "Bb3", "Db4", "F4"],
+
+    // ----- B -----
+    B:   [null, "B2", "F#3", "B3", "D#4", "F#4"],
+    Bm:  [null, "B2", "F#3", "B3", "D4", "F#4"]
 
 };
-
 
 // ---------------------------------
 // GUITAR STRINGS
@@ -102,28 +255,57 @@ const strings = document.querySelectorAll(".string");
 // AUDIO ENGINE
 // ---------------------------------
 
-const noteFrequencies = {
+// ---------------------------------
+// AUTOMATIC NOTE FREQUENCY
+// ---------------------------------
 
-    "E2": 82.41,
-    "G2": 98.00,
-    "A2": 110.00,
-    "B2": 123.47,
+function getNoteFrequency(note) {
 
-    "C3": 130.81,
-    "D3": 146.83,
-    "E3": 164.81,
-    "F#3": 185.00,
-    "G3": 196.00,
-    "A3": 220.00,
-    "B3": 246.94,
+    const notePattern =
+        /^([A-G])([#b]?)(\d)$/;
 
-    "C4": 261.63,
-    "D4": 293.66,
-    "E4": 329.63,
-    "F#4": 369.99,
-    "G4": 392.00
+    const match = note.match(notePattern);
 
-};
+    if (!match) {
+        console.log("Invalid note:", note);
+        return null;
+    }
+
+    const noteName = match[1] + match[2];
+    const octave = Number(match[3]);
+
+    const semitones = {
+        "C": 0,
+        "C#": 1,
+        "Db": 1,
+        "D": 2,
+        "D#": 3,
+        "Eb": 3,
+        "E": 4,
+        "F": 5,
+        "F#": 6,
+        "Gb": 6,
+        "G": 7,
+        "G#": 8,
+        "Ab": 8,
+        "A": 9,
+        "A#": 10,
+        "Bb": 10,
+        "B": 11
+    };
+
+    const midiNumber =
+        (octave + 1) * 12 +
+        semitones[noteName];
+
+    const frequency =
+        440 * Math.pow(
+            2,
+            (midiNumber - 69) / 12
+        );
+
+    return frequency;
+}
 
 let audioContext = null;
 
@@ -150,7 +332,7 @@ function playNote(note) {
 
     const audio = getAudioContext();
 
-    const frequency = noteFrequencies[note];
+    const frequency = getNoteFrequency(note);
 
     if (!frequency) {
         console.log("Frequency not found:", note);
