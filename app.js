@@ -9,7 +9,7 @@ let selectedChord = "G";
 
 chordButtons.forEach(button => {
 
-    button.addEventListener("click", () => {
+    button.addEventListener("pointerdown", () => {
 
         // Remove selected state from all buttons
         chordButtons.forEach(btn => {
