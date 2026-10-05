@@ -44,7 +44,9 @@ body {
 
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-start;
+    gap: 18px;
+    padding-left: 12px;
 }
 
 /* ------------------------------
