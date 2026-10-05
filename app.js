@@ -390,6 +390,7 @@ const guitar = document.querySelector(".guitar");
 
 let isPlaying = false;
 let lastStringPlayed = null;
+const stringSwitchThreshold = 0.15;
 
 
 // Prevent browser dragging
@@ -434,39 +435,65 @@ guitar.addEventListener("pointermove", (event) => {
 
     const nearestString = getNearestString(event.clientY);
 
-    if (
-        nearestString !== null &&
-        nearestString !== lastStringPlayed
-    ) {
+    // If we're outside the playable string area,
+    // don't trigger anything.
+    if (nearestString === null) {
+        return;
+    }
+
+    // First string encountered
+    if (lastStringPlayed === null) {
+        playStringByIndex(nearestString);
+        return;
+    }
+
+    // We're still closest to the same string
+    if (nearestString === lastStringPlayed) {
+        return;
+    }
+
+    // Find the center of the current string
+    // and the string we're considering moving to.
+    const currentRect =
+        strings[lastStringPlayed].getBoundingClientRect();
+
+    const nextRect =
+        strings[nearestString].getBoundingClientRect();
+
+    const currentCenter =
+        currentRect.top + (currentRect.height / 2);
+
+    const nextCenter =
+        nextRect.top + (nextRect.height / 2);
+
+    // Normal halfway point between the two strings
+    const midpoint =
+        (currentCenter + nextCenter) / 2;
+
+    // Extra distance required before switching
+    const buffer =
+        Math.abs(nextCenter - currentCenter) *
+        stringSwitchThreshold;
+
+    let shouldSwitch = false;
+
+    // Moving downward
+    if (nextCenter > currentCenter) {
+        shouldSwitch =
+            event.clientY > midpoint + buffer;
+    }
+
+    // Moving upward
+    if (nextCenter < currentCenter) {
+        shouldSwitch =
+            event.clientY < midpoint - buffer;
+    }
+
+    if (shouldSwitch) {
         playStringByIndex(nearestString);
     }
 
 });
-
-
-// ---------------------------------
-// POINTER UP
-// ---------------------------------
-
-guitar.addEventListener("pointerup", (event) => {
-
-    isPlaying = false;
-    lastStringPlayed = null;
-
-    if (guitar.hasPointerCapture(event.pointerId)) {
-        guitar.releasePointerCapture(event.pointerId);
-    }
-
-});
-
-
-guitar.addEventListener("pointercancel", () => {
-
-    isPlaying = false;
-    lastStringPlayed = null;
-
-});
-
 
 // ---------------------------------
 // FIND NEAREST STRING
