@@ -225,7 +225,7 @@ body {
 .soundhole {
     position: absolute;
 
-    width: min(32vh, 180px);
+    width: min(46vh, 240px);
     aspect-ratio: 1;
 
     border-radius: 50%;
