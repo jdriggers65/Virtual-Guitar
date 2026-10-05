@@ -43,10 +43,12 @@ body {
     background: #c85d4d;
 
     display: flex;
+    flex-direction: row-reverse;
     align-items: center;
-    justify-content: flex-start;
+    justify-content: flex-end;
     gap: 18px;
     padding-left: 12px;
+    
 }
 
 /* ------------------------------
