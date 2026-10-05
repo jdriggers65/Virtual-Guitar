@@ -57,8 +57,7 @@ body {
     align-items: center;
     justify-content: center;
 
-    margin-right: 30px;
-    gap: 10px;
+    gap: 4px;
 }
 
 .key-display {
@@ -75,13 +74,13 @@ body {
 }
 
 #current-key {
-    font-size: 32px;
+    font-size: 26px;
     font-weight: bold;
 }
 
 .key-button {
-    width: 42px;
-    height: 32px;
+    width: 38px;
+    height: 28px;
 
     border: none;
     border-radius: 8px;
