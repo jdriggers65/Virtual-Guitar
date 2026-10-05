@@ -142,7 +142,7 @@ body {
 
 .chord {
     width: 60px;
-    height: min(60px, 11vh);
+    height: min(60px, 10vh);
 
     border: none;
     border-radius: 12px;
