@@ -203,18 +203,11 @@ body {
     width: 68%;
     height: 100%;
 
-    background:
-        radial-gradient(
-            circle at center,
-            #090909 0%,
-            #090909 25%,
-            transparent 26%
-        ),
-        linear-gradient(
-            135deg,
-            #934333,
-            #32100d
-        );
+    background: linear-gradient(
+    135deg,
+    #934333,
+    #32100d
+);
 
     display: flex;
     flex-direction: column;
@@ -226,8 +219,23 @@ body {
     touch-action: none;
     cursor: pointer; 
     user-select: none;
+    position: relative;
 }
 
+.soundhole {
+    position: absolute;
+
+    width: min(32vh, 180px);
+    aspect-ratio: 1;
+
+    border-radius: 50%;
+    background: #090909;
+
+    left: 50%;
+    top: 50%;
+
+    transform: translate(-50%, -50%);
+}
 
 /* ------------------------------
    GUITAR STRINGS
@@ -249,6 +257,7 @@ body {
     cursor: pointer;
 
     position: relative;
+    z-index: 1;
 }
 
 
