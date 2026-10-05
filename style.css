@@ -258,6 +258,16 @@ body {
     bottom: -20px;
 }
 
+/* NUM / CHORD mode will move to Settings */
+
+#chord-mode-toggle {
+    display: none;
+}
+
+.chord-display {
+    display: none;
+}
+
 /* ==================================
    0.5 - LANDSCAPE MODE
 ================================== */
