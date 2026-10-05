@@ -126,11 +126,11 @@ body {
 ------------------------------ */
 
 .chord-buttons {
-    height: 80%;
-
+    height: 92%;
     display: flex;
     flex-direction: column;
-    justify-content: space-around;
+    justify-content: space-between;
+    align-items: center;
 }
 
 
@@ -139,8 +139,9 @@ body {
 ------------------------------ */
 
 .chord {
-    width: 60px;
-    height: 60px;
+  .chord {
+    width: clamp(48px, 11vh, 68px);
+    height: clamp(48px, 11vh, 68px);
 
     border: none;
     border-radius: 12px;
