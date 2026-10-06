@@ -320,6 +320,16 @@ function getAudioContext() {
 
     return audioContext;
 }
+
+async function prepareAudio() {
+
+    const audio = getAudioContext();
+
+    if (audio.state === "suspended") {
+        await audio.resume();
+    }
+
+}
     
 function playNote(note) {
 
