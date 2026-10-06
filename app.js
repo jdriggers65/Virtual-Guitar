@@ -392,8 +392,6 @@ let isPlaying = false;
 let lastStringPlayed = null;
 let lastPointerY = null;
 
-const stringSwitchThreshold = 0.15;
-
 // Prevent browser dragging
 guitar.addEventListener("dragstart", (event) => {
     event.preventDefault();
@@ -435,65 +433,60 @@ guitar.addEventListener("pointermove", (event) => {
 
     event.preventDefault();
 
-    const nearestString = getNearestString(event.clientY);
+    const currentPointerY = event.clientY;
 
-    // If we're outside the playable string area,
-    // don't trigger anything.
-    if (nearestString === null) {
-        return;
+    // Get the center position of every string
+    const stringCenters = Array.from(strings).map(string => {
+        const rect = string.getBoundingClientRect();
+        return rect.top + (rect.height / 2);
+    });
+
+    // Determine which direction the finger is moving
+    const movingDown =
+        currentPointerY > lastPointerY;
+
+    const movingUp =
+        currentPointerY < lastPointerY;
+
+    if (movingDown) {
+
+        // Check strings from top to bottom
+        stringCenters.forEach((stringCenter, index) => {
+
+            if (
+                lastPointerY < stringCenter &&
+                currentPointerY >= stringCenter
+            ) {
+                playStringByIndex(index);
+            }
+
+        });
+
+    } else if (movingUp) {
+
+        // Check strings from bottom to top
+        for (
+            let index = stringCenters.length - 1;
+            index >= 0;
+            index--
+        ) {
+
+            const stringCenter =
+                stringCenters[index];
+
+            if (
+                lastPointerY > stringCenter &&
+                currentPointerY <= stringCenter
+            ) {
+                playStringByIndex(index);
+            }
+
+        }
+
     }
 
-    // First string encountered
-    if (lastStringPlayed === null) {
-        playStringByIndex(nearestString);
-        return;
-    }
-
-    // We're still closest to the same string
-    if (nearestString === lastStringPlayed) {
-        return;
-    }
-
-    // Find the center of the current string
-    // and the string we're considering moving to.
-    const currentRect =
-        strings[lastStringPlayed].getBoundingClientRect();
-
-    const nextRect =
-        strings[nearestString].getBoundingClientRect();
-
-    const currentCenter =
-        currentRect.top + (currentRect.height / 2);
-
-    const nextCenter =
-        nextRect.top + (nextRect.height / 2);
-
-    // Normal halfway point between the two strings
-    const midpoint =
-        (currentCenter + nextCenter) / 2;
-
-    // Extra distance required before switching
-    const buffer =
-        Math.abs(nextCenter - currentCenter) *
-        stringSwitchThreshold;
-
-    let shouldSwitch = false;
-
-    // Moving downward
-    if (nextCenter > currentCenter) {
-        shouldSwitch =
-            event.clientY > midpoint + buffer;
-    }
-
-    // Moving upward
-    if (nextCenter < currentCenter) {
-        shouldSwitch =
-            event.clientY < midpoint - buffer;
-    }
-
-    if (shouldSwitch) {
-        playStringByIndex(nearestString);
-    }
+    // Remember where the finger is for the next movement
+    lastPointerY = currentPointerY;
 
 });
 
