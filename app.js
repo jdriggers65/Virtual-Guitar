@@ -410,6 +410,7 @@ guitar.addEventListener("pointerdown", (event) => {
 
     isPlaying = true;
     lastStringPlayed = null;
+    lastPointerY = event.clientY;
 
     guitar.setPointerCapture(event.pointerId);
 
