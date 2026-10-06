@@ -313,11 +313,9 @@ function getAudioContext() {
 
     if (!audioContext) {
         audioContext =
-            new (window.AudioContext || window.webkitAudioContext)();
-    }
-
-    if (audioContext.state === "suspended") {
-        audioContext.resume();
+            new (window.AudioContext || window.webkitAudioContext)({
+                latencyHint: "interactive"
+            });
     }
 
     return audioContext;
@@ -369,11 +367,11 @@ function playNote(note) {
     );
 
 
-    oscillator.start();
+    oscillator.start(audio.currentTime);
 
     oscillator.stop(
-        audioContext.currentTime + 1.2
-    );
+    audio.currentTime + 1.2
+);
 
 }
 
