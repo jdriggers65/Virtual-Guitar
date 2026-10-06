@@ -390,8 +390,9 @@ const guitar = document.querySelector(".guitar");
 
 let isPlaying = false;
 let lastStringPlayed = null;
-const stringSwitchThreshold = 0.15;
+let lastPointerY = null;
 
+const stringSwitchThreshold = 0.15;
 
 // Prevent browser dragging
 guitar.addEventListener("dragstart", (event) => {
