@@ -405,6 +405,7 @@ guitar.addEventListener("dragstart", (event) => {
 guitar.addEventListener("pointerdown", (event) => {
 
     event.preventDefault();
+    guitar.classList.add("touching");
 
     isPlaying = true;
     lastStringPlayed = null;
@@ -616,6 +617,7 @@ document.addEventListener("pointerup", () => {
 
     isPlaying = false;
     lastStringPlayed = null;
+    guitar.classList.remove("touching");
 
 });
 
@@ -625,6 +627,7 @@ document.addEventListener("pointercancel", () => {
 
     isPlaying = false;
     lastStringPlayed = null;
+    guitar.classList.remove("touching");
 
 });
 

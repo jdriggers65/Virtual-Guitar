@@ -207,6 +207,7 @@ body {
     135deg,
     #934333,
     #32100d
+    
 );
 
     display: flex;
@@ -220,6 +221,10 @@ body {
     cursor: pointer; 
     user-select: none;
     position: relative;
+
+    .guitar.touching {
+    filter: brightness(1.35);
+}
 }
 
 .soundhole {
