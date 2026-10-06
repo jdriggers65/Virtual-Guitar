@@ -222,9 +222,6 @@ body {
     user-select: none;
     position: relative;
 
-    .guitar.touching {
-    filter: brightness(1.35);
-}
 }
 
 .soundhole {

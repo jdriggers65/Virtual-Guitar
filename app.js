@@ -413,10 +413,8 @@ guitar.addEventListener("dragstart", (event) => {
 guitar.addEventListener("pointerdown", async event => {
 
     event.preventDefault();
-    
-    await prepareAudio();
 
-    guitar.classList.add("touching");
+    await prepareAudio();
 
     isPlaying = true;
     lastStringPlayed = null;
@@ -628,8 +626,7 @@ document.addEventListener("pointerup", () => {
 
     isPlaying = false;
     lastStringPlayed = null;
-    guitar.classList.remove("touching");
-
+    
 });
 
 
@@ -638,8 +635,7 @@ document.addEventListener("pointercancel", () => {
 
     isPlaying = false;
     lastStringPlayed = null;
-    guitar.classList.remove("touching");
-
+   
 });
 
 
