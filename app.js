@@ -410,9 +410,12 @@ guitar.addEventListener("dragstart", (event) => {
 // POINTER DOWN
 // ---------------------------------
 
-guitar.addEventListener("pointerdown", (event) => {
+guitar.addEventListener("pointerdown", async event => {
 
     event.preventDefault();
+    
+    await prepareAudio();
+
     guitar.classList.add("touching");
 
     isPlaying = true;
