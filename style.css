@@ -255,6 +255,10 @@ body {
         box-shadow 0.1s;
 }
 
+.seventh-chord-buttons .chord {
+    font-size: 17px;
+}
+
 
 /* Major chords */
 
