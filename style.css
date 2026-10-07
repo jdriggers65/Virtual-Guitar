@@ -40,12 +40,12 @@ body {
     width: 32%;
     height: 100%;
 
-    background:
+  background:
     linear-gradient(
-        115deg,
-        #b94f43 0%,
-        #9f3f38 45%,
-        #762d2a 100%
+        110deg,
+        #171313 0%,
+        #211817 55%,
+        #351b17 100%
     );
 
     display: flex;
