@@ -54,7 +54,35 @@ body {
     justify-content: flex-end;
     gap: 18px;
     padding-left: 26px;
+    position: relative;
     
+}
+
+.controls::after {
+    content: "";
+    position: absolute;
+
+    top: 0;
+    right: -6px;
+
+    width: 12px;
+    height: 100%;
+
+    background: linear-gradient(
+        to right,
+        #d8c6a5 0%,
+        #f0dfbd 35%,
+        #c5ad85 70%,
+        #8d775b 100%
+    );
+
+    box-shadow:
+        -3px 0 5px rgba(0, 0, 0, 0.35),
+        4px 0 6px rgba(0, 0, 0, 0.45);
+
+    z-index: 5;
+
+    pointer-events: none;
 }
 
 /* ------------------------------
