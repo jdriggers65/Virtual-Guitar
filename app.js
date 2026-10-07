@@ -136,8 +136,8 @@ function updateChordButtonLabels() {
 
     });
 
-    const seventhRomanNumerals = [
-    "I7","ii7","iii7","IV7","V7","vi7"
+const seventhRomanNumerals = [
+    "Imaj7","ii7","iii7","IVmaj7","V7","vi7"
 ];
 
 seventhChordButtons.forEach((button, index) => {
