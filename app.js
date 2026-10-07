@@ -99,7 +99,11 @@ keyDownButton.addEventListener("pointerdown", () => {
 // CHORD BUTTONS
 // ---------------------------------
 
-const chordButtons = document.querySelectorAll(".chord");
+const chordButtons =
+    document.querySelectorAll(".chord-buttons .chord");
+
+const seventhChordButtons =
+    document.querySelectorAll(".seventh-chord-buttons .chord");
 
 const currentChordDisplay =
     document.getElementById("current-chord");
@@ -131,6 +135,14 @@ function updateChordButtonLabels() {
         }
 
     });
+
+    const seventhRomanNumerals = [
+    "I7","ii7","iii7","IV7","V7","vi7"
+];
+
+seventhChordButtons.forEach((button, index) => {
+    button.textContent = seventhRomanNumerals[index];
+});
 
   }
 
