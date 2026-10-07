@@ -127,6 +127,10 @@ body {
 #current-key {
     font-size: 26px;
     font-weight: bold;
+    color: #f3e7cf;
+
+    text-shadow:
+        0 0 4px rgba(243, 231, 207, 0.35);
 }
 
 .key-button {
