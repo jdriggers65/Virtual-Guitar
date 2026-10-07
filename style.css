@@ -253,12 +253,22 @@ background:
     aspect-ratio: 1;
 
     border-radius: 50%;
-    background: #090909;
 
-    border: 5px solid rgba(220, 170, 110, 0.55);
+    background: radial-gradient(
+        circle,
+        #050505 0%,
+        #090706 68%,
+        #160c08 100%
+    );
+
+    border: 5px solid rgba(210, 155, 95, 0.75);
+
     box-shadow:
-        0 0 0 3px rgba(40, 15, 10, 0.8),
-        inset 0 0 18px rgba(0, 0, 0, 0.9);
+        0 0 0 2px rgba(45, 18, 10, 0.95),
+        0 0 0 5px rgba(190, 125, 65, 0.35),
+        0 0 0 7px rgba(45, 18, 10, 0.8),
+        inset 0 0 22px rgba(0, 0, 0, 1),
+        3px 5px 10px rgba(0, 0, 0, 0.45);
 
     left: 50%;
     top: 50%;
