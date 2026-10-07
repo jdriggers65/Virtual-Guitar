@@ -203,11 +203,13 @@ body {
     width: 68%;
     height: 100%;
 
-    background: linear-gradient(
-    135deg,
-    #934333,
-    #32100d
-    
+   background: linear-gradient(
+    100deg,
+    #5a2118 0%,
+    #9b4930 25%,
+    #b9653e 50%,
+    #8a3d29 75%,
+    #4a1813 100%
 );
 
     display: flex;
@@ -305,10 +307,10 @@ body {
 
 @keyframes string-vibrate {
     0%   { transform: translateY(0); }
-    15%  { transform: translateY(-1.5px); }
-    30%  { transform: translateY(1.5px); }
-    45%  { transform: translateY(-1px); }
-    60%  { transform: translateY(0.75px); }
+    15%  { transform: translateY(-2px); }
+    30%  { transform: translateY(2px); }
+    45%  { transform: translateY(-1.5px); }
+    60%  { transform: translateY(1px); }
     75%  { transform: translateY(-0.5px); }
     100% { transform: translateY(0); }
 }
