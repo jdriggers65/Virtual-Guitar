@@ -567,6 +567,15 @@ function playStringByIndex(index) {
 
     const noteIndex = 5 - index;
 
+    const stringElement = strings[index];
+
+stringElement.classList.remove("vibrating");
+
+// Force the browser to reset the animation
+void stringElement.offsetWidth;
+
+stringElement.classList.add("vibrating");
+
     const note = notes[noteIndex];
 
     if (note) {
