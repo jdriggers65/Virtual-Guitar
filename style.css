@@ -204,6 +204,12 @@ body {
     height: 100%;
 
 background:
+    radial-gradient(
+        ellipse at 48% 42%,
+        rgba(255, 220, 175, 0.12) 0%,
+        rgba(255, 190, 135, 0.05) 30%,
+        transparent 62%
+    ),
     repeating-linear-gradient(
         2deg,
         rgba(255, 220, 180, 0.018) 0px,
