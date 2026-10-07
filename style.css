@@ -277,21 +277,30 @@ background:
 
 .string {
     width: 100%;
-    height: 3px;
+    height: 2px;
 
-    .string:nth-child(1) { height: 1px; }
-    .string:nth-child(2) { height: 1.5px; }
-    .string:nth-child(3) { height: 2px; }
-    .string:nth-child(4) { height: 2.5px; }
-    .string:nth-child(5) { height: 3px; }
-    .string:nth-child(6) { height: 4px; }
+    background: linear-gradient(
+        to bottom,
+        rgba(255, 255, 255, 0.95),
+        rgba(205, 205, 195, 0.9) 45%,
+        rgba(105, 95, 85, 0.9) 100%
+    );
 
-    background: #eeeeee;
+    box-shadow:
+        0 1px 1px rgba(0, 0, 0, 0.45),
+        0 -1px 1px rgba(255, 255, 255, 0.15);
 
     cursor: pointer;
-
     position: relative;
     z-index: 1;
+
+.string[data-string="1"] { height: 1px; }
+.string[data-string="2"] { height: 1.5px; }
+.string[data-string="3"] { height: 2px; }
+.string[data-string="4"] { height: 2.5px; }
+.string[data-string="5"] { height: 3px; }
+.string[data-string="6"] { height: 4px; }
+
 }
 
 
