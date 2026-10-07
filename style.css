@@ -211,6 +211,18 @@ body {
     align-items: center;
 }
 
+.chord-buttons {
+    order: 1;
+}
+
+.seventh-chord-buttons {
+    order: 2;
+}
+
+.key-control {
+    order: 3;
+}
+
 
 /* ------------------------------
    CHORD BUTTONS
