@@ -282,6 +282,57 @@ const chordNotes = {
 
 };
 
+// Generate seventh chords from existing chords
+Object.entries(chordNotes).forEach(([chordName, notes]) => {
+
+    // Skip any seventh chords already defined manually
+    if (chordName.includes("7")) return;
+
+    const isMinor = chordName.endsWith("m");
+    const root = isMinor ? chordName.slice(0, -1) : chordName;
+
+    // Get the root note's pitch class
+    const noteNames = [
+        "C", "C#", "D", "Eb", "E", "F",
+        "F#", "G", "Ab", "A", "Bb", "B"
+    ];
+
+    const aliases = {
+        Db: "C#", "D#": "Eb", Gb: "F#",
+        "G#": "Ab", "A#": "Bb"
+    };
+
+    const normalizedRoot = aliases[root] || root;
+    const rootIndex = noteNames.indexOf(normalizedRoot);
+
+    if (rootIndex === -1) return;
+
+    const makeSeventh = (semitones, suffix) => {
+        const seventhIndex = (rootIndex + semitones) % 12;
+        const seventhName = noteNames[seventhIndex];
+
+        const newNotes = [...notes];
+
+        // Replace the highest sounding note with the seventh
+        for (let i = newNotes.length - 1; i >= 0; i--) {
+            if (newNotes[i] !== null) {
+                const octave = parseInt(newNotes[i].slice(-1), 10);
+                newNotes[i] = seventhName + octave;
+                break;
+            }
+        }
+
+        chordNotes[root + suffix] = newNotes;
+    };
+
+    if (isMinor) {
+        makeSeventh(10, "m7");
+    } else {
+        makeSeventh(11, "maj7");
+        makeSeventh(10, "7");
+    }
+});
+
 // ---------------------------------
 // GUITAR STRINGS
 // ---------------------------------
