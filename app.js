@@ -167,17 +167,24 @@ let selectedChord = "G";
 
 updateChordsForKey();
 
-chordButtons.forEach(button => {
+const allChordButtons = [
+    ...chordButtons,
+    ...seventhChordButtons
+];
+
+allChordButtons.forEach(button => {
 
     button.addEventListener("pointerdown", () => {
 
-        // Remove selected state from all buttons
-        chordButtons.forEach(btn => {
+        // Remove selected state from all chord buttons
+        allChordButtons.forEach(btn => {
             btn.classList.remove("selected");
         });
 
         // Select the button that was clicked
         button.classList.add("selected");
+
+        console.log("Button selected:", button.textContent, button.className);
 
         // Store the selected chord
         selectedChord = button.dataset.chord;
@@ -188,7 +195,6 @@ chordButtons.forEach(button => {
     });
 
 });
-
 
 // ---------------------------------
 // GUITAR CHORD VOICINGS
