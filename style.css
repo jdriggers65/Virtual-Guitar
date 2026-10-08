@@ -538,3 +538,130 @@ background:
     font-size: 20px;
     cursor: pointer;
 }
+
+/* SETTINGS OVERLAY */
+
+.settings-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+
+    background: rgba(0, 0, 0, 0.85);
+
+    align-items: center;
+    justify-content: center;
+}
+
+.settings-panel {
+    width: 80%;
+    max-width: 500px;
+    padding: 30px;
+
+    background: linear-gradient(
+        135deg,
+        #211817,
+        #3b241d
+    );
+
+    border: 1px solid #8f7b60;
+    border-radius: 16px;
+
+    color: #f0e4d0;
+    text-align: center;
+
+    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.6);
+}
+
+.settings-panel h2 {
+    margin: 0 0 25px;
+    font-size: 26px;
+}
+
+#settings-close {
+    padding: 10px 20px;
+
+    background: #283ac7;
+    color: white;
+
+    border: none;
+    border-radius: 8px;
+
+    font-size: 16px;
+    cursor: pointer;
+}
+
+/* SETTINGS ROW */
+
+.setting-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    margin-bottom: 25px;
+    gap: 20px;
+
+    font-size: 18px;
+    text-align: left;
+}
+
+/* ON/OFF SWITCH */
+
+#seventh-chords-toggle,
+#chord-names-toggle,
+#left-handed-toggle {
+    appearance: none;
+    -webkit-appearance: none;
+
+    width: 52px;
+    height: 28px;
+    flex-shrink: 0;
+
+    background: #555;
+    border: 1px solid #777;
+    border-radius: 20px;
+
+    position: relative;
+    cursor: pointer;
+}
+
+#seventh-chords-toggle::before,
+#chord-names-toggle::before,
+#left-handed-toggle::before {
+    content: "";
+    position: absolute;
+
+    width: 20px;
+    height: 20px;
+    top: 3px;
+    left: 3px;
+
+    background: white;
+    border-radius: 50%;
+
+    transition: transform 0.2s ease;
+}
+
+#seventh-chords-toggle:checked,
+#chord-names-toggle:checked,
+#left-handed-toggle:checked {
+    background: #283ac7;
+    border-color: #6575e8;
+}
+
+#seventh-chords-toggle:checked::before,
+#chord-names-toggle:checked::before,
+#left-handed-toggle:checked::before {
+    transform: translateX(24px);
+}
+
+/* Mirror controls for left-handed mode */
+.guitar-app.left-handed .controls {
+    flex-direction: row-reverse;
+}
+
+/* Left-handed divider position */
+.guitar-app.left-handed .controls::after {
+    right: auto;
+    left: -6px;
+}
