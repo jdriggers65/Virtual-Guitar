@@ -665,3 +665,9 @@ background:
     right: auto;
     left: -6px;
 }
+
+/* Settings button position in left-handed mode */
+.guitar-app.left-handed #settings-button {
+    right: auto;
+    left: 22px;
+}
