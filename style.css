@@ -514,3 +514,22 @@ background:
         text-align: center;
     }
 }
+
+/* Settings button */
+#settings-button {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    z-index: 20;
+
+    width: 30px;
+    height: 30px;
+
+    background: rgba(0, 0, 0, 0.35);
+    color: #d6c5a7;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 8px;
+
+    font-size: 20px;
+    cursor: pointer;
+}
