@@ -40,6 +40,24 @@ function updateChordsForKey() {
         button.dataset.chord = chords[index];
     });
 
+    // Build seventh chords from the current key
+const seventhChords = chords.map((chord, index) => {
+    if (index === 0 || index === 3) {
+        return chord + "maj7";
+    }
+
+    if (index === 4) {
+        return chord + "7";
+    }
+
+    return chord.replace(/m$/, "m7");
+});
+
+// Update the seventh-chord buttons
+seventhChordButtons.forEach((button, index) => {
+    button.dataset.chord = seventhChords[index];
+});
+
     updateChordButtonLabels();
 
     // Keep the currently selected Roman numeral
