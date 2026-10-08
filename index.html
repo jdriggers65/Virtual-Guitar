@@ -9,7 +9,7 @@
 
     <title>Virtual Guitar</title>
 
-    <link rel="stylesheet" href="style.css?v=0.6C-1d">
+    <link rel="stylesheet" href="style.css?v=0.6C-12">
 </head>
 
 <body>
@@ -101,9 +101,58 @@
 
     </main>
 
-    <script src="./app.js?v=0.6C-1d"></script>
+    <!-- SETTINGS SCREEN -->
+<div id="settings-overlay" class="settings-overlay">
 
-    <div class="build-version">TEST 0.6C-1d</div>
+    <div class="settings-panel">
+
+        <h2>Settings</h2>
+
+        <div class="setting-row">
+    <label for="seventh-chords-toggle">
+        Seventh Chords
+    </label>
+
+    <input
+        type="checkbox"
+        id="seventh-chords-toggle"
+        checked
+    >
+</div>
+
+<div class="setting-row">
+    <label for="chord-names-toggle">
+        Show Chord Names
+    </label>
+
+    <input
+        type="checkbox"
+        id="chord-names-toggle"
+    >
+</div>
+
+<div class="setting-row">
+    <label for="left-handed-toggle">
+        Left-Handed Mode
+    </label>
+
+    <input
+        type="checkbox"
+        id="left-handed-toggle"
+    >
+</div>
+
+<button id="settings-close">
+    ✕ Close
+</button>
+
+    </div>
+
+</div>
+
+    <script src="./app.js?v=0.6C-12"></script>
+
+    <div class="build-version">TEST 0.6C-12</div>
 
 </body>
 

@@ -159,7 +159,13 @@ const seventhRomanNumerals = [
 ];
 
 seventhChordButtons.forEach((button, index) => {
-    button.textContent = seventhRomanNumerals[index];
+
+    if (showChordNames) {
+        button.textContent = button.dataset.chord;
+    } else {
+        button.textContent = seventhRomanNumerals[index];
+    }
+
 });
 
   }
@@ -816,3 +822,97 @@ function playString(stringElement) {
     }
 
 }
+
+// ----- SETTINGS SCREEN -----
+
+const settingsButton =
+    document.getElementById("settings-button");
+
+const settingsOverlay =
+    document.getElementById("settings-overlay");
+
+const settingsClose =
+    document.getElementById("settings-close");
+
+// Open Settings
+settingsButton.addEventListener("click", () => {
+    settingsOverlay.style.display = "flex";
+});
+
+// Close Settings
+settingsClose.addEventListener("click", () => {
+    settingsOverlay.style.display = "none";
+});
+
+// ----- SEVENTH CHORDS SETTING -----
+
+const seventhChordsToggle =
+    document.getElementById("seventh-chords-toggle");
+
+const seventhChordColumn =
+    document.querySelector(".seventh-chord-buttons");
+
+seventhChordsToggle.addEventListener("change", () => {
+
+    if (seventhChordsToggle.checked) {
+        seventhChordColumn.style.display = "flex";
+    } else {
+        seventhChordColumn.style.display = "none";
+    }
+
+    // If a seventh chord is selected, switch to its standard chord
+const selectedSeventh =
+    document.querySelector(".seventh-chord-buttons .selected");
+
+if (selectedSeventh) {
+    const chordIndex =
+        Array.from(seventhChordButtons).indexOf(selectedSeventh);
+
+    allChordButtons.forEach(button => {
+        button.classList.remove("selected");
+    });
+
+    const standardButton = chordButtons[chordIndex];
+
+    standardButton.classList.add("selected");
+    selectedChord = standardButton.dataset.chord;
+    currentChordDisplay.textContent = selectedChord;
+}
+
+});
+
+// ----- CHORD NAMES SETTING -----
+
+const chordNamesToggle =
+    document.getElementById("chord-names-toggle");
+
+chordNamesToggle.addEventListener("change", () => {
+
+    showChordNames = chordNamesToggle.checked;
+
+    updateChordButtonLabels();
+
+});
+
+// ----- LEFT-HANDED MODE SETTING -----
+
+const leftHandedToggle =
+    document.getElementById("left-handed-toggle");
+
+const guitarApp =
+    document.querySelector(".guitar-app");
+
+leftHandedToggle.addEventListener("change", () => {
+
+    if (leftHandedToggle.checked) {
+        guitarApp.style.flexDirection = "row-reverse";
+    } else {
+        guitarApp.style.flexDirection = "row";
+    }
+
+    guitarApp.classList.toggle(
+    "left-handed",
+    leftHandedToggle.checked
+);
+
+});
