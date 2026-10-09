@@ -835,7 +835,7 @@ const settingsClose =
     document.getElementById("settings-close");
 
 // Open Settings
-settingsButton.addEventListener("click", () => {
+settingsButton.addEventListener("pointerdown", () => {
     settingsOverlay.style.display = "flex";
 });
 
@@ -861,25 +861,37 @@ seventhChordsToggle.addEventListener("change", () => {
     }
 
     // If a seventh chord is selected, switch to its standard chord
-const selectedSeventh =
-    document.querySelector(".seventh-chord-buttons .selected");
+    if (!seventhChordsToggle.checked) {
 
-if (selectedSeventh) {
-    const chordIndex =
-        Array.from(seventhChordButtons).indexOf(selectedSeventh);
+        const selectedSeventh =
+            document.querySelector(".seventh-chord-buttons .selected");
 
-    allChordButtons.forEach(button => {
-        button.classList.remove("selected");
-    });
+        if (selectedSeventh) {
+            const chordIndex =
+                Array.from(seventhChordButtons).indexOf(selectedSeventh);
 
-    const standardButton = chordButtons[chordIndex];
+            allChordButtons.forEach(button => {
+                button.classList.remove("selected");
+            });
 
-    standardButton.classList.add("selected");
-    selectedChord = standardButton.dataset.chord;
-    currentChordDisplay.textContent = selectedChord;
-}
+            const standardButton = chordButtons[chordIndex];
+
+            standardButton.classList.add("selected");
+            selectedChord = standardButton.dataset.chord;
+            currentChordDisplay.textContent = selectedChord;
+        }
+    }
+
+    // Save the Seventh Chords preference
+    localStorage.setItem("seventhChordsEnabled", seventhChordsToggle.checked);
 
 });
+
+// Restore saved Seventh Chords preference when the app opens
+if (localStorage.getItem("seventhChordsEnabled") === "false") {
+    seventhChordsToggle.checked = false;
+    seventhChordColumn.style.display = "none";
+}
 
 // ----- CHORD NAMES SETTING -----
 
@@ -892,7 +904,16 @@ chordNamesToggle.addEventListener("change", () => {
 
     updateChordButtonLabels();
 
+    localStorage.setItem("showChordNames", chordNamesToggle.checked);
+
 });
+
+// Restore saved chord name preference when the app opens
+if (localStorage.getItem("showChordNames") === "true") {
+    chordNamesToggle.checked = true;
+    showChordNames = true;
+    updateChordButtonLabels();
+}
 
 // ----- LEFT-HANDED MODE SETTING -----
 
@@ -910,9 +931,14 @@ leftHandedToggle.addEventListener("change", () => {
         guitarApp.style.flexDirection = "row";
     }
 
-    guitarApp.classList.toggle(
-    "left-handed",
-    leftHandedToggle.checked
-);
+    guitarApp.classList.toggle("left-handed", leftHandedToggle.checked);
+    localStorage.setItem("leftHandedMode", leftHandedToggle.checked);
 
 });
+
+// Restore saved left-handed preference when the app opens
+if (localStorage.getItem("leftHandedMode") === "true") {
+    leftHandedToggle.checked = true;
+    guitarApp.style.flexDirection = "row-reverse";
+    guitarApp.classList.add("left-handed");
+}
