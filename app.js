@@ -200,6 +200,8 @@ allChordButtons.forEach(button => {
 
     button.addEventListener("pointerdown", () => {
 
+        stopAllStrings();
+
         // Remove selected state from all chord buttons
         allChordButtons.forEach(btn => {
             btn.classList.remove("selected");
@@ -424,59 +426,181 @@ async function prepareAudio() {
     }
 
 }
-    
-function playNote(note) {
 
-    // Don't do anything for muted strings
+// ----- ACOUSTIC GUITAR SAMPLES -----
+
+const guitarSamples = {};
+
+// Track the currently playing note on each guitar string
+const activeStringNotes = {};
+
+// Fade out all currently ringing guitar strings
+function stopAllStrings() {
+
+    const audio = getAudioContext();
+    const now = audio.currentTime;
+
+    Object.keys(activeStringNotes).forEach(index => {
+
+        const note = activeStringNotes[index];
+
+        note.gain.gain.cancelScheduledValues(now);
+
+        note.gain.gain.setValueAtTime(
+            note.gain.gain.value,
+            now
+        );
+
+        note.gain.gain.linearRampToValueAtTime(
+            0,
+            now + 0.50
+        );
+
+        note.source.stop(now + 0.50);
+
+        delete activeStringNotes[index];
+    });
+}
+
+const guitarSampleFiles = {
+    E2: "mix-e2.wav",
+    A2: "mix-a2.wav",
+    D3: "mix-d3.wav",
+    G3: "mix-g3.wav",
+    B3: "mix-b3.wav",
+    E4: "mix-e4.wav"
+};
+
+async function loadGuitarSamples() {
+
+    const audio = getAudioContext();
+
+    for (const [note, filename] of Object.entries(guitarSampleFiles)) {
+
+        try {
+            const response = await fetch("./audio/" + filename);
+
+            if (!response.ok) {
+                throw new Error("Could not load " + filename);
+            }
+
+            const fileData = await response.arrayBuffer();
+
+            guitarSamples[note] = await audio.decodeAudioData(fileData);
+
+            console.log("Loaded guitar sample:", note);
+
+        } catch (error) {
+            console.error("Error loading", note, error);
+        }
+    }
+}
+
+loadGuitarSamples();
+    
+function playNote(note, stringIndex, velocity = 0.7) {
+
+    // Don't play muted strings
     if (!note) {
         return;
     }
 
     const audio = getAudioContext();
 
-    const frequency = getNoteFrequency(note);
+    const targetFrequency = getNoteFrequency(note);
 
-    if (!frequency) {
+    if (!targetFrequency) {
         console.log("Frequency not found:", note);
         return;
     }
 
-    const oscillator = audio.createOscillator();
+    // Find the recorded sample closest to our target note
+    let closestSample = null;
+    let closestFrequency = 0;
+    let smallestDifference = Infinity;
+
+    for (const sampleNote of Object.keys(guitarSamples)) {
+
+        const sampleFrequency = getNoteFrequency(sampleNote);
+
+        const difference = Math.abs(
+            Math.log2(targetFrequency / sampleFrequency)
+        );
+
+        if (difference < smallestDifference) {
+            smallestDifference = difference;
+            closestSample = guitarSamples[sampleNote];
+            closestFrequency = sampleFrequency;
+        }
+    }
+
+    if (!closestSample) {
+        console.log("Guitar samples not ready");
+        return;
+    }
+
+    // Play the selected guitar recording
+
+    // Fade out the previous note on this same string
+const previousNote = activeStringNotes[stringIndex];
+
+if (previousNote) {
+    const now = audio.currentTime;
+
+    previousNote.gain.gain.cancelScheduledValues(now);
+    previousNote.gain.gain.setValueAtTime(
+        previousNote.gain.gain.value,
+        now
+    );
+    previousNote.gain.gain.linearRampToValueAtTime(
+        0,
+        now + 0.05
+    );
+
+    previousNote.source.stop(now + 0.05);
+}
+
+    const source = audio.createBufferSource();
     const gain = audio.createGain();
 
-    oscillator.type = "triangle";
+    source.buffer = closestSample;
 
-    oscillator.frequency.value = frequency;
+    // Adjust pitch to match the chord note
+    source.playbackRate.value =
+        targetFrequency / closestFrequency;
 
-    oscillator.connect(gain);
+    // Control note volume based on playing strength
+    gain.gain.value = velocity;
+
+    source.connect(gain);
     gain.connect(audio.destination);
 
+    // Remember which note is playing on this string
+activeStringNotes[stringIndex] = {
+    source: source,
+    gain: gain
+};
 
-    // Start quietly
-    gain.gain.setValueAtTime(
-        0.0001,
-        audio.currentTime
-    );
+// Clear the reference when playback finishes
+source.onended = () => {
+    if (activeStringNotes[stringIndex]?.source === source) {
+        delete activeStringNotes[stringIndex];
+    }
+};
 
-    // Quick attack
-    gain.gain.exponentialRampToValueAtTime(
-        0.4,
-        audio.currentTime + 0.01
-    );
+    // Skip the silence before the recorded guitar note
+    // Adjust the starting point for individual guitar samples
+    let sampleOffset = 0.30;
 
-    // Fade out
-    gain.gain.exponentialRampToValueAtTime(
-        0.0001,
-        audio.currentTime + 1.2
-    );
+    if (closestSample === guitarSamples.B3) {
+    sampleOffset = 0.52;
+    }
 
+    if (closestSample === guitarSamples.D3) {
+    sampleOffset = 0.34;
+    }
 
-    oscillator.start(audio.currentTime);
-
-    oscillator.stop(
-    audio.currentTime + 1.2
-);
-
+    source.start(0, sampleOffset);
 }
 
 // ---------------------------------
@@ -493,6 +617,8 @@ const guitar = document.querySelector(".guitar");
 let isPlaying = false;
 let lastStringPlayed = null;
 let lastPointerY = null;
+let lastPointerTime = performance.now();
+let smoothedStrumSpeed = 0;
 
 // Prevent browser dragging
 guitar.addEventListener("dragstart", (event) => {
@@ -519,7 +645,7 @@ guitar.addEventListener("pointerdown", async event => {
     const nearestString = getNearestString(event.clientY);
 
     if (nearestString !== null) {
-        playStringByIndex(nearestString);
+        playStringByIndex(nearestString, 0.25);
     }
 
 });
@@ -538,6 +664,32 @@ guitar.addEventListener("pointermove", (event) => {
     event.preventDefault();
 
     const currentPointerY = event.clientY;
+
+    // Measure how fast the finger is moving
+    const currentPointerTime = performance.now();
+
+    const timeDifference = currentPointerTime - lastPointerTime;
+    const distanceMoved = Math.abs(currentPointerY - lastPointerY);
+
+   // Calculate speed and limit unrealistic spikes
+    const strumSpeed = timeDifference > 0
+    ? Math.min(distanceMoved / timeDifference, 5)
+    : 0;
+
+    // Smooth out sudden changes in finger speed
+    smoothedStrumSpeed =
+    smoothedStrumSpeed * 0.7 + strumSpeed * 0.3;
+
+    // Convert strumming speed into playing strength
+   // Wider dynamic range for testing
+const strumVelocity = Math.min(
+    1.0,
+    Math.max(0.08, smoothedStrumSpeed * 0.20)
+);
+
+lastPointerTime = currentPointerTime;
+
+console.log("Strum speed:", strumSpeed.toFixed(2));
 
     // Get the center position of every string
     const stringCenters = Array.from(strings).map(string => {
@@ -561,7 +713,7 @@ guitar.addEventListener("pointermove", (event) => {
                 lastPointerY < stringCenter &&
                 currentPointerY >= stringCenter
             ) {
-                playStringByIndex(index);
+                playStringByIndex(index, strumVelocity);
             }
 
         });
@@ -582,7 +734,7 @@ guitar.addEventListener("pointermove", (event) => {
                 lastPointerY > stringCenter &&
                 currentPointerY <= stringCenter
             ) {
-                playStringByIndex(index);
+                playStringByIndex(index, strumVelocity);
             }
 
         }
@@ -649,7 +801,9 @@ function getNearestString(pointerY) {
 // PLAY STRING BY INDEX
 // ---------------------------------
 
-function playStringByIndex(index) {
+function playStringByIndex(index, velocity = 0.7) {
+
+    console.log("Playing velocity:", velocity.toFixed(2));
 
     if (index === lastStringPlayed) {
         return;
@@ -683,7 +837,7 @@ stringElement.classList.add("vibrating");
             note
         );
 
-        playNote(note);
+        playNote(note, index, velocity);
 
     } else {
 
@@ -701,6 +855,7 @@ stringElement.classList.add("vibrating");
 
 
 // Finger/mouse moves while held down
+/*
 document.addEventListener("pointermove", (event) => {
 
     if (!isPlaying) {
@@ -722,7 +877,7 @@ document.addEventListener("pointermove", (event) => {
     }
 
 });
-
+*/
 
 // Finger/mouse released
 document.addEventListener("pointerup", () => {
@@ -779,7 +934,7 @@ function playString(stringElement) {
             note
         );
 
-        playNote(note);
+        playNote(note, index);
 
     } else {
 
@@ -818,7 +973,7 @@ function playString(stringElement) {
     const note = notes[noteIndex];
 
     if (note) {
-        playNote(note);
+        playNote(note, index);
     }
 
 }
