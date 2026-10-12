@@ -671,3 +671,11 @@ background:
     right: auto;
     left: 22px;
 }
+
+/* Prevent unwanted browser gestures while playing */
+.guitar {
+    touch-action: none;
+    -webkit-user-select: none;
+    user-select: none;
+    -webkit-touch-callout: none;
+}
