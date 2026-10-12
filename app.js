@@ -431,6 +431,9 @@ async function prepareAudio() {
 
 const guitarSamples = {};
 
+// Available guitar recording sources
+let currentSoundSource = "mix";
+
 // Track the currently playing note on each guitar string
 const activeStringNotes = {};
 
@@ -463,12 +466,12 @@ function stopAllStrings() {
 }
 
 const guitarSampleFiles = {
-    E2: "mix-e2.wav",
-    A2: "mix-a2.wav",
-    D3: "mix-d3.wav",
-    G3: "mix-g3.wav",
-    B3: "mix-b3.wav",
-    E4: "mix-e4.wav"
+    E2: "e2.wav",
+    A2: "a2.wav",
+    D3: "d3.wav",
+    G3: "g3.wav",
+    B3: "b3.wav",
+    E4: "e4.wav"
 };
 
 async function loadGuitarSamples() {
@@ -478,7 +481,9 @@ async function loadGuitarSamples() {
     for (const [note, filename] of Object.entries(guitarSampleFiles)) {
 
         try {
-            const response = await fetch("./audio/" + filename);
+            const response = await fetch(
+            "./audio/" + currentSoundSource + "-" + filename
+            );
 
             if (!response.ok) {
                 throw new Error("Could not load " + filename);
@@ -497,6 +502,30 @@ async function loadGuitarSamples() {
 }
 
 loadGuitarSamples();
+
+// ----- CHANGE GUITAR SOUND SOURCE -----
+
+async function changeSoundSource(source) {
+
+    currentSoundSource = source;
+
+    console.log("Changing sound source to:", source);
+
+    await loadGuitarSamples();
+
+    console.log("Sound source ready:", source);
+}
+
+// ----- SOUND SOURCE SETTINGS CONTROL -----
+
+const soundSourceSelect =
+    document.getElementById("sound-source-select");
+
+soundSourceSelect.addEventListener("change", async () => {
+
+    await changeSoundSource(soundSourceSelect.value);
+
+});
     
 function playNote(note, stringIndex, velocity = 0.7) {
 
@@ -565,12 +594,22 @@ if (previousNote) {
 
     source.buffer = closestSample;
 
-    // Adjust pitch to match the chord note
     source.playbackRate.value =
-        targetFrequency / closestFrequency;
+    targetFrequency / closestFrequency;
 
     // Control note volume based on playing strength
     gain.gain.value = velocity;
+
+    // Test a shorter, more natural note decay
+    const now = audio.currentTime;
+
+    gain.gain.setValueAtTime(velocity, now);
+
+    gain.gain.setTargetAtTime(
+    0,
+    now + 0.35,
+    1.0
+);
 
     source.connect(gain);
     gain.connect(audio.destination);

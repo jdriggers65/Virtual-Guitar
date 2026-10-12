@@ -9,7 +9,7 @@
 
     <title>Virtual Guitar</title>
 
-    <link rel="stylesheet" href="style.css?v=0.6C-44">
+    <link rel="stylesheet" href="style.css?v=0.6C-45">
 </head>
 
 <body>
@@ -142,6 +142,17 @@
     >
 </div>
 
+<!-- Guitar Sound Source -->
+<div class="setting-row sound-source-row">
+    <label for="sound-source-select">Sound Source</label>
+
+    <select id="sound-source-select">
+        <option value="mix">Mix (Mic + DI)</option>
+        <option value="mic">Microphone</option>
+        <option value="di">DI (Pickup)</option>
+    </select>
+</div>
+
 <button id="settings-close">
     ✕ Close
 </button>
@@ -150,9 +161,9 @@
 
 </div>
 
-    <script src="./app.js?v=0.6C-44"></script>
+    <script src="./app.js?v=0.6C-45"></script>
 
-    <div class="build-version">TEST 0.6C-44</div>
+    <div class="build-version">TEST 0.6C-45</div>
 
 </body>
 
